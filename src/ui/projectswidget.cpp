@@ -14,10 +14,11 @@ ProjectsWidget::~ProjectsWidget() {
 
 void ProjectsWidget::refresh_projects() {
     DbMgr dbmgr;
-    DB_QRES qres = dbmgr.run_select_query("SELECT * FROM Project");
+    DB_QRES qres = dbmgr.run_select_query("SELECT * FROM Project", NULL);
+    qDebug() << qres->count();
     for (int i=0; i < qres->count(); i++) {
         DB_QROW row = qres->at(i);
-        qDebug() << row['name'];
+        qDebug() << row->value("created");
     }
 }
 

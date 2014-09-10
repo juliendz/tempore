@@ -82,20 +82,21 @@ void DbMgr::init_schema() {
 
 
 
-QList<QHash<QString, QVariant>* >* DbMgr::run_select_query(QString qs, QHash<QString, QVariant> args) {
+DB_QRES DbMgr::run_select_query(QString qs, DB_QROW args) {
     db_.open();
     QSqlQuery query(db_);
     query.prepare(qs);
-    QHashIterator<QString, QVariant> iter(args);
-    while (iter.hasNext()) {
-        iter.next();
-        query.bindValue(iter.key(), iter.value());
+    if (args) {
+        QHash<QString, QVariant>::const_iterator iter = args->constBegin();
+        while (iter != args->constEnd()) {
+            query.bindValue(iter.key(), iter.value());
+        }
     }
     if (!query.exec()) {
         qDebug() << query.lastError();
     }
 
-    QList<QHash<QString, QVariant>* >* qres = new QList<QHash<QString, QVariant>* >();
+    DB_QRES qres = new QList<QHash<QString, QVariant>* >;
     bool continueLoop = true;
     do{
         if (query.next()) {
@@ -123,9 +124,8 @@ void DbMgr::run_query(QString qs, QHash<QString, QVariant> args){
     db_.open();
     QSqlQuery query(db_);
     query.prepare(qs);
-    QHashIterator<QString, QVariant> iter(args);
-    while (iter.hasNext()) {
-        iter.next();
+    QHash<QString, QVariant>::const_iterator iter = args.constBegin();
+    while (iter != args.constEnd()) {
         query.bindValue(iter.key(), iter.value());
     }
     if (!query.exec()) {

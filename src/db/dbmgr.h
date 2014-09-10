@@ -1,9 +1,6 @@
 #ifndef DBMGR_H
 #define DBMGR_H
 
-typedef QList<QHash<QString, QVariant>* >* DB_QRES;
-typedef QHash<QString, QVariant>* DB_QROW;
-
 #include <QObject>
 #include <QMutex>
 #include <QSqlDatabase>
@@ -14,13 +11,17 @@ typedef QHash<QString, QVariant>* DB_QROW;
 #include <QDebug>
 #include <QStringList>
 #include <QHash>
+#include <QHashIterator>
 #include <QList>
+
+typedef QList<QHash<QString, QVariant>* >* DB_QRES;
+typedef QHash<QString, QVariant>* DB_QROW;
 
 class DbMgr {
 
 public:
     DbMgr();
-    QList<QHash<QString, QVariant>* >*  run_select_query(QString qs, QHash<QString, QVariant> args);
+    DB_QRES run_select_query(QString qs, DB_QROW args);
     void run_query(QString qs, QHash<QString, QVariant> args);
 
 private:
